@@ -25,15 +25,11 @@ public class MainActivity extends AppCompatActivity implements
     public static final String TAG = MainActivity.class.getSimpleName();
     public static final int NEWS_LOADER_ID = 1;
 
-    // API key from secrets.xml
-    private static final String API_KEY =
-            "2be88ee4-f67c-4859-b447-345947a6c50d";
-
-//            Resources.getSystem().getString(R
-//            .string.guardian_api_key);
+    // API key from the guardian
+    private String API_KEY = "2be88ee4-f67c-4859-b447-345947a6c50d";
 
     // URL for article data
-    private static final String GUARDIAN_REQUEST_URL = "https://content" + "" +
+    private String GUARDIAN_REQUEST_URL = "https://content" +
             ".guardianapis.com/search?section=games&order-by=newest&show-tags" +
             "" + "=contributor&page=1&page-size=10&q=videogames%20OR%20xbox" +
             "%20OR" + "%20playstation%20OR%20nintendo&api-key=" + API_KEY;
@@ -151,5 +147,11 @@ public class MainActivity extends AppCompatActivity implements
     public void onLoaderReset(Loader<List<Article>> loader) {
         // Clear the adapter of previous earthquake data
         mAdapter.clear();
+    }
+
+    private String getStringResourceByName(String aString) {
+        String packageName = getPackageName();
+        int resId = getResources().getIdentifier(aString, "string", packageName);
+        return getString(resId);
     }
 }
