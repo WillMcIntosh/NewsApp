@@ -11,10 +11,9 @@ public class MainActivity extends AppCompatActivity {
             .string.guardian_api_key);
 
     // URL for article data
-    private static final String GUARDIAN_REQUEST_URL = "https://content" + "" +
-            ".guardianapis.com/search?section=games&order-by=newest&show" +
-            "-fields=headline," +
-            "byline&page=1&page-size=10&q=videogames%20OR%20xbox%20OR" +
+    private static final String GUARDIAN_REQUEST_URL = "https://content" +
+            ".guardianapis.com/search?section=games&order-by=newest&show-tags" +
+            "=contributor&page=1&page-size=10&q=videogames%20OR%20xbox%20OR" +
             "%20playstation%20OR%20nintendo&api-key=" + API_KEY;
 
 
