@@ -2,7 +2,7 @@ package com.willmcintosh.videogamenews;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.content.AsyncTaskLoader;
+import android.content.AsyncTaskLoader;
 
 import java.util.List;
 
