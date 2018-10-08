@@ -26,7 +26,7 @@ public class QueryUtils {
     private QueryUtils() {
     }
 
-    public static List<News> fetchNewsData(String requestedUrl) {
+    public static List<Article> fetchNewsData(String requestedUrl) {
 
         // Create URL
         URL newsUrl = createUrl(requestedUrl);
@@ -40,13 +40,14 @@ public class QueryUtils {
         }
 
         // Extract relevant data
-        List<News> myNews = extractNewsFromJson(jsonResponse);
+        List<Article> myNews = extractNewsFromJson(jsonResponse);
 
         return myNews;
     }
 
-    private static List<News> extractNewsFromJson(String jsonResponse) {
+    private static List<Article> extractNewsFromJson(String jsonResponse) {
         String title;
+        String section;
         String author;
         String date;
         String urlSource;
@@ -55,7 +56,7 @@ public class QueryUtils {
             return null;
         }
 
-        List<News> myNews = new ArrayList<>();
+        List<Article> myNews = new ArrayList<>();
 
         try {
             JSONObject baseJsonResponse = new JSONObject(jsonResponse);
@@ -71,6 +72,7 @@ public class QueryUtils {
                         (i);
                 // extract values
                 title = currentArticle.getString("webTitle");
+                section = currentArticle.getString("sectionName");
                 urlSource = currentArticle.getString("webUrl");
                 date = currentArticle.getString("webPublicationDate");
 
@@ -90,6 +92,11 @@ public class QueryUtils {
                     authorBuilder.append(currentAuthor.getString("webTitle"));
                 }
                 author = authorBuilder.toString();
+
+                Article article = new Article(title, section, author, date,
+                        urlSource);
+
+                myNews.add(article);
             }
 
         } catch (JSONException e) {

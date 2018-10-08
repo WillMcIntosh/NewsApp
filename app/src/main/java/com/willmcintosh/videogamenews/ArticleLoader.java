@@ -6,15 +6,15 @@ import android.support.v4.content.AsyncTaskLoader;
 
 import java.util.List;
 
-public class NewsLoader extends AsyncTaskLoader<List<News>> {
+public class ArticleLoader extends AsyncTaskLoader<List<Article>> {
 
     /** Tag for log messages */
-    private static final String TAG = NewsLoader.class.getSimpleName();
+    private static final String TAG = ArticleLoader.class.getSimpleName();
 
     /** Query URL */
     private String mUrl;
 
-    public NewsLoader(@NonNull Context context, String url) {
+    public ArticleLoader(@NonNull Context context, String url) {
         super(context);
         this.mUrl = url;
     }
@@ -25,14 +25,14 @@ public class NewsLoader extends AsyncTaskLoader<List<News>> {
     }
 
     @Override
-    public List<News> loadInBackground() {
+    public List<Article> loadInBackground() {
         if (mUrl == null) {
             return null;
         }
         // Perform the network request, parse the response, and extract a list
         // of earthquakes.
-        List<News> news = QueryUtils.fetchNewsData(mUrl);
-        return news;
+        List<Article> articles = QueryUtils.fetchNewsData(mUrl);
+        return articles;
 
     }
 }

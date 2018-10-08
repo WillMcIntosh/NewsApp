@@ -11,11 +11,10 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class NewsAdapter extends ArrayAdapter<News> {
+public class ArticleAdapter extends ArrayAdapter<Article> {
 
-    public NewsAdapter(@NonNull Context context, @NonNull ArrayList<News>
-            NewsList) {
-        super(context, 0, NewsList);
+    public ArticleAdapter(@NonNull Context context, @NonNull ArrayList<Article> articleList) {
+        super(context, 0, articleList);
     }
 
     @NonNull
@@ -32,11 +31,11 @@ public class NewsAdapter extends ArrayAdapter<News> {
         TextView articleDate = convertView.findViewById(R.id.date_textview);
 
         // Get current news story details
-        News currentNews = getItem(position);
+        Article currentArticle = getItem(position);
         // Set associated String values
-        articleTitle.setText(currentNews.getArticleTitle());
-        articleAuthor.setText(currentNews.getArticleAuthor());
-        articleDate.setText(currentNews.getArticleDate());
+        articleTitle.setText(currentArticle.getArticleTitle());
+        articleAuthor.setText(currentArticle.getArticleAuthor());
+        articleDate.setText(currentArticle.getArticleDate());
         return convertView;
     }
 }

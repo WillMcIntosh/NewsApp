@@ -1,13 +1,13 @@
 package com.willmcintosh.videogamenews;
 
-public class News {
+public class Article {
     private String articleTitle;
     private String articleSection;
     private String articleAuthor;
     private String articleDate;
     private String articleUrl;
 
-    public News(String articleTitle, String articleSection, String
+    public Article(String articleTitle, String articleSection, String
             articleAuthor, String articleDate, String articleURL) {
         this.articleTitle = articleTitle;
         this.articleSection = articleSection;

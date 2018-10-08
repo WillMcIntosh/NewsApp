@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Layout for a list of news articles -->
+    <!-- Layout for a list of articles articles -->
     <ListView
         android:id="@+id/list"
         android:orientation="vertical"
