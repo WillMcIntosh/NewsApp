@@ -74,10 +74,22 @@ public class QueryUtils {
                 urlSource = currentArticle.getString("webUrl");
                 date = currentArticle.getString("webPublicationDate");
 
-                JSONArray authorArray = currentNewsArticles.getJSONArray
+                // get each author in case of multiples
+                StringBuilder authorBuilder = new StringBuilder();
+                JSONArray authorArray = currentArticle.getJSONArray
                         ("tags");
-                // TODO get authors
+                for (int j = 0; j < authorArray.length(); j++) {
 
+                    // add commas before each author after the first
+                    if (j > 0) {
+                        authorBuilder.append(", ");
+                    }
+
+                    // extract webTitle from each Object and add to Authors
+                    JSONObject currentAuthor = authorArray.getJSONObject(j);
+                    authorBuilder.append(currentAuthor.getString("webTitle"));
+                }
+                author = authorBuilder.toString();
             }
 
         } catch (JSONException e) {
