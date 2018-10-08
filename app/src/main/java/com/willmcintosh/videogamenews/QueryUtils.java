@@ -11,13 +11,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.net.ssl.HttpsURLConnection;
 
 public class QueryUtils {
 
@@ -34,7 +33,7 @@ public class QueryUtils {
         // Perform HTTP request
         String jsonResponse = null;
         try {
-            jsonResponse = makeHttpsRequest(newsUrl);
+            jsonResponse = makeHttpRequest(newsUrl);
         } catch (IOException e) {
             Log.e(TAG, "Problem making HTTP request.", e);
         }
@@ -106,18 +105,18 @@ public class QueryUtils {
         return myNews;
     }
 
-    private static String makeHttpsRequest(URL newsUrl) throws IOException {
+    private static String makeHttpRequest(URL newsUrl) throws IOException {
         String jsonResponse = "";
 
         if (newsUrl == null) {
             return jsonResponse;
         }
 
-        HttpsURLConnection urlConnection = null;
+        HttpURLConnection urlConnection = null;
         InputStream inputStream = null;
         // Create the connection
         try {
-            urlConnection = (HttpsURLConnection) newsUrl.openConnection();
+            urlConnection = (HttpURLConnection) newsUrl.openConnection();
             urlConnection.setReadTimeout(10000);
             urlConnection.setConnectTimeout(15000);
             urlConnection.setRequestMethod("GET");
@@ -127,11 +126,11 @@ public class QueryUtils {
                 inputStream = urlConnection.getInputStream();
                 jsonResponse = readFromStream(inputStream);
             } else {
-                Log.e(TAG, "makeHttpsRequest: Error Code " + urlConnection
+                Log.e(TAG, "makeHttpRequest: Error Code " + urlConnection
                         .getResponseCode());
             }
         } catch (IOException e) {
-            Log.e(TAG, "makeHttpsRequest: Couldn't retrieve JSON", e);
+            Log.e(TAG, "makeHttpRequest: Couldn't retrieve JSON", e);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();

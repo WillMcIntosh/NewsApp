@@ -26,8 +26,11 @@ public class MainActivity extends AppCompatActivity implements
     public static final int NEWS_LOADER_ID = 1;
 
     // API key from secrets.xml
-    private static final String API_KEY = Resources.getSystem().getString(R
-            .string.guardian_api_key);
+    private static final String API_KEY =
+            "2be88ee4-f67c-4859-b447-345947a6c50d";
+
+//            Resources.getSystem().getString(R
+//            .string.guardian_api_key);
 
     // URL for article data
     private static final String GUARDIAN_REQUEST_URL = "https://content" + "" +
