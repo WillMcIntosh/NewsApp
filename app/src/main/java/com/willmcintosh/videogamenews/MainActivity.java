@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,8 +20,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements
-        LoaderCallbacks<List<Article>> {
+public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<Article>> {
 
     public static final String TAG = MainActivity.class.getSimpleName();
     public static final int NEWS_LOADER_ID = 1;
@@ -29,24 +29,18 @@ public class MainActivity extends AppCompatActivity implements
     private String API_KEY = "2be88ee4-f67c-4859-b447-345947a6c50d";
 
     // URL for article data
-    private String GUARDIAN_REQUEST_URL = "https://content" +
-            ".guardianapis.com/search?section=games&order-by=newest&show-tags" +
-            "" + "=contributor&page=1&page-size=10&q=videogames%20OR%20xbox" +
-            "%20OR" + "%20playstation%20OR%20nintendo&api-key=" + API_KEY;
+    private String GUARDIAN_REQUEST_URL = "https://content" + ".guardianapis" +
+            ".com/search?section=games&order-by=newest&show-tags" + "" +
+            "=contributor&page=1&page-size=10&q=videogames%20OR%20xbox" + "%20OR" +
+            "%20playstation%20OR%20nintendo&api-key=" + API_KEY;
 
-    /**
-     * Adapter for the list of news articles
-     */
+    // Adapter for the list of news articles
     private ArticleAdapter mAdapter;
 
-    /**
-     * TextView to be displayed when the list is empty
-     */
+    // TextView to be displayed when the list is empty
     private TextView mEmptyStateView;
 
-    /**
-     * Connection status
-     */
+    // Connection status
     private boolean isConnected;
 
 
@@ -68,11 +62,9 @@ public class MainActivity extends AppCompatActivity implements
         // Set an item click listener on the ListView, which sends an intent to
         // a web browser to open a website with more information about the
         // selected earthquake.
-        articleListView.setOnItemClickListener(new AdapterView
-                .OnItemClickListener() {
+        articleListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view,
-                                    int position, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 // Find the current earthquake that was clicked on
                 Article currentArticle = mAdapter.getItem(position);
 
@@ -81,8 +73,7 @@ public class MainActivity extends AppCompatActivity implements
                 Uri articleUri = Uri.parse(currentArticle.getArticleUrl());
 
                 // Create a new intent to view the earthquake URI
-                Intent websiteIntent = new Intent(Intent.ACTION_VIEW,
-                        articleUri);
+                Intent websiteIntent = new Intent(Intent.ACTION_VIEW, articleUri);
 
                 // Send the intent to launch a new activity
                 startActivity(websiteIntent);
@@ -100,13 +91,12 @@ public class MainActivity extends AppCompatActivity implements
         articleListView.setEmptyView(mEmptyStateView);
 
         /** Determine if there is a network connection */
-        ConnectivityManager cm = (ConnectivityManager) getSystemService
-                (Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context
+                .CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
-        isConnected = activeNetwork != null && activeNetwork
-                .isConnectedOrConnecting();
+        isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
     @Override
@@ -116,8 +106,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onLoadFinished(Loader<List<Article>> loader, List<Article>
-            articles) {
+    public void onLoadFinished(Loader<List<Article>> loader, List<Article> articles) {
 
         // Hide loading indicator because the data has been loaded
         View loadingIndicator = findViewById(R.id.loading_indicator);

@@ -69,7 +69,7 @@ public class QueryUtils {
             for (int i = 0; i < currentNewsArticles.length(); i++) {
                 JSONObject currentArticle = currentNewsArticles.getJSONObject
                         (i);
-                // extract values
+                // extract values from JSON to be added to Article object
                 title = currentArticle.getString("webTitle");
                 section = currentArticle.getString("sectionName");
                 urlSource = currentArticle.getString("webUrl");

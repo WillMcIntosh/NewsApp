@@ -40,13 +40,11 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
         TextView articleSection = (TextView) listItemView.findViewById(R.id
                 .section_textview);
 
-
         // Set associated String values
         articleTitle.setText(currentArticle.getArticleTitle());
         articleAuthor.setText(currentArticle.getArticleAuthor());
         articleDate.setText(currentArticle.getArticleDate());
         articleSection.setText(currentArticle.getArticleSection());
-
 
         return listItemView;
     }
