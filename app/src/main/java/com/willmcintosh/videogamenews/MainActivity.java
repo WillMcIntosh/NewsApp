@@ -148,10 +148,4 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         // Clear the adapter of previous earthquake data
         mAdapter.clear();
     }
-
-    private String getStringResourceByName(String aString) {
-        String packageName = getPackageName();
-        int resId = getResources().getIdentifier(aString, "string", packageName);
-        return getString(resId);
-    }
 }
