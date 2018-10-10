@@ -5,6 +5,8 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -23,7 +25,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<Article>> {
 
     public static final String TAG = MainActivity.class.getSimpleName();
-    public static final int NEWS_LOADER_ID = 1;
+    private static final int NEWS_LOADER_ID = 1;
 
     // API key from the guardian
     private String API_KEY = "2be88ee4-f67c-4859-b447-345947a6c50d";
@@ -75,8 +77,17 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
                 // Create a new intent to view the earthquake URI
                 Intent websiteIntent = new Intent(Intent.ACTION_VIEW, articleUri);
 
-                // Send the intent to launch a new activity
-                startActivity(websiteIntent);
+                // Check that there is an app capable of handling intent
+                PackageManager packageManager = getPackageManager();
+                List<ResolveInfo> activities = packageManager.queryIntentActivities(websiteIntent,
+                        PackageManager.MATCH_DEFAULT_ONLY);
+                boolean isIntentSafe = activities.size() > 0;
+
+                if (isIntentSafe) {
+                    // Send the intent to launch a new activity
+                    startActivity(websiteIntent);
+                }
+
             }
         });
 
