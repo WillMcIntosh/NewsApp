@@ -6,16 +6,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Movie;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
             "=contributor&page=1&page-size=10&q=videogames%20OR%20xbox" + "%20OR" +
             "%20playstation%20OR%20nintendo&api-key=" + API_KEY;
 
+    private List<Article> articleList = new ArrayList<>();
+    private RecyclerView recyclerView;
     // Adapter for the list of news articles
     private ArticleAdapter mAdapter;
 
@@ -50,24 +57,28 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         setContentView(R.layout.activity_main);
 
         // Find a reference to the {@link ListView} in the layout
-        ListView articleListView = (ListView) findViewById(R.id.list);
+        recyclerView = findViewById(R.id.recycler_view);
 
         // Create a new adapter that takes an empty list of earthquakes as input
-        mAdapter = new ArticleAdapter(this, new ArrayList<Article>());
+        mAdapter = new ArticleAdapter(articleList);
 
-        // Set the adapter on the {@link ListView}
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        // Set the adapter on the {@link RecyclerView}
         // so the list can be populated in the user interface
-        articleListView.setAdapter(mAdapter);
+        recyclerView.setAdapter(mAdapter);
 
         // Set an item click listener on the ListView, which sends an intent to
         // a web browser to open a website with more information about the
         // selected earthquake.
-        articleListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                // Find the current earthquake that was clicked on
-                Article currentArticle = mAdapter.getItem(position);
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(),
+                recyclerView, new RecyclerTouchListener.ClickListener() {
 
+            @Override
+            public void onClick(View view, int position) {
+                Article currentArticle = articleList.get(position);
                 // Convert the String URL into a URI object (to pass into the
                 // Intent constructor)
                 Uri articleUri = Uri.parse(currentArticle.getArticleUrl());
@@ -85,9 +96,14 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
                     // Send the intent to launch a new activity
                     startActivity(websiteIntent);
                 }
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
 
             }
-        });
+
+        }));
 
         // Get a reference to the LoaderManager, in order to interact with
         // loaders.
@@ -97,7 +113,6 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         loaderManager.initLoader(NEWS_LOADER_ID, null, this);
 
         mEmptyStateView = (TextView) findViewById(R.id.empty_view);
-        articleListView.setEmptyView(mEmptyStateView);
 
         /** Determine if there is a network connection */
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context
@@ -125,18 +140,15 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         mEmptyStateView.setText(R.string.no_internet);
 
         if (isConnected) {
-            // Set empty state text to display "No articless found."
+            // Set empty state text to display "No articles found."
             mEmptyStateView.setText(R.string.no_articles);
 
         }
 
-        // Clear the adapter of previous earthquake data
-        mAdapter.clear();
-
         // If there is a valid list of Articles, add them to
-        // the adapters data set, which will trigger a ListView update
+        // the adapters data set, which will trigger a RecyclerView update
         if (articles != null && !articles.isEmpty()) {
-            mAdapter.addAll(articles);
+            mAdapter.swap(articles);
         }
 
     }
