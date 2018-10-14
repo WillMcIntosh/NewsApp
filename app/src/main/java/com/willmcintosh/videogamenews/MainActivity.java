@@ -5,12 +5,14 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -33,10 +35,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     private String API_KEY = "2be88ee4-f67c-4859-b447-345947a6c50d";
 
     // URL for article data
-    private String GUARDIAN_REQUEST_URL = "https://content" + ".guardianapis" + "" +
-            ".com/search?section=games&order-by=newest&show-tags" + "" +
-            "=contributor&page=1&page-size=10&q=videogames%20OR%20xbox" + "%20OR" +
-            "%20playstation%20OR%20nintendo&api-key=" + API_KEY;
+    private String GUARDIAN_REQUEST_URL = "https://content.guardianapis.com/search";
 
     // Adapter for the list of news articles
     private ArticleAdapter mAdapter;
@@ -129,11 +128,39 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         }
         return super.onOptionsItemSelected(item);
     }
-    
+
     @Override
     public Loader<List<Article>> onCreateLoader(int i, Bundle bundle) {
-        // Create a new loader for the given URL
-        return new ArticleLoader(this, GUARDIAN_REQUEST_URL);
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // getString retrieves a String value from the preferences. The second param is the
+        // default value for this preference
+
+        // page number
+        String pageNumber = sharedPrefs.getString(getString(R.string.settings_page_number_key),
+                getString(R.string.settings_page_number_default));
+
+        // sort by
+
+        // parse breaks apart the URI string that's passed into its param
+        Uri baseUri = Uri.parse(GUARDIAN_REQUEST_URL);
+        // buildUpon prepares the baseURI that we just parsed and can add query params to
+        Uri.Builder uriBuilder = baseUri.buildUpon();
+        // Append query params and their values.
+        uriBuilder.appendQueryParameter("q",
+                "videogames%20OR%20xbox%20OR%20playstation%20OR%20nintendo");
+        uriBuilder.appendQueryParameter("section", "games");
+
+        uriBuilder.appendQueryParameter("show-tags", "contributor");
+        uriBuilder.appendQueryParameter("page-size", "10");
+        uriBuilder.appendQueryParameter("api-key", API_KEY);
+
+        uriBuilder.appendQueryParameter("order-by", "newest");
+        uriBuilder.appendQueryParameter("page", pageNumber);
+
+        // return a completed URI
+        return new ArticleLoader(this, uriBuilder.toString());
     }
 
     @Override
