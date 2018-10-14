@@ -5,6 +5,8 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -29,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     private String API_KEY = "2be88ee4-f67c-4859-b447-345947a6c50d";
 
     // URL for article data
-    private String GUARDIAN_REQUEST_URL = "https://content" + ".guardianapis" +
+    private String GUARDIAN_REQUEST_URL = "https://content" + ".guardianapis" + "" +
             ".com/search?section=games&order-by=newest&show-tags" + "" +
             "=contributor&page=1&page-size=10&q=videogames%20OR%20xbox" + "%20OR" +
             "%20playstation%20OR%20nintendo&api-key=" + API_KEY;
@@ -75,8 +77,16 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
                 // Create a new intent to view the earthquake URI
                 Intent websiteIntent = new Intent(Intent.ACTION_VIEW, articleUri);
 
-                // Send the intent to launch a new activity
-                startActivity(websiteIntent);
+                // Check that there is an app capable of handling intent
+                PackageManager packageManager = getPackageManager();
+                List<ResolveInfo> activities = packageManager.queryIntentActivities
+                        (websiteIntent, PackageManager.MATCH_DEFAULT_ONLY);
+                boolean isIntentSafe = activities.size() > 0;
+
+                if (isIntentSafe) {
+                    // Send the intent to launch a new activity
+                    startActivity(websiteIntent);
+                }
             }
         });
 
@@ -136,11 +146,5 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     public void onLoaderReset(Loader<List<Article>> loader) {
         // Clear the adapter of previous earthquake data
         mAdapter.clear();
-    }
-
-    private String getStringResourceByName(String aString) {
-        String packageName = getPackageName();
-        int resId = getResources().getIdentifier(aString, "string", packageName);
-        return getString(resId);
     }
 }
