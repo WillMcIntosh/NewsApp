@@ -140,8 +140,12 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         // page number
         String pageNumber = sharedPrefs.getString(getString(R.string.settings_page_number_key),
                 getString(R.string.settings_page_number_default));
-
-        // sort by
+        // page size
+        String pageSize = sharedPrefs.getString(getString(R.string.settings_page_size_key),
+                getString(R.string.settings_page_size_default));
+        // order by
+        String orderBy = sharedPrefs.getString(getString(R.string.settings_order_by_key),
+                getString(R.string.settings_order_by_default));
 
         // parse breaks apart the URI string that's passed into its param
         Uri baseUri = Uri.parse(GUARDIAN_REQUEST_URL);
@@ -153,11 +157,11 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         uriBuilder.appendQueryParameter("section", "games");
 
         uriBuilder.appendQueryParameter("show-tags", "contributor");
-        uriBuilder.appendQueryParameter("page-size", "10");
         uriBuilder.appendQueryParameter("api-key", API_KEY);
 
-        uriBuilder.appendQueryParameter("order-by", "newest");
         uriBuilder.appendQueryParameter("page", pageNumber);
+        uriBuilder.appendQueryParameter("page-size", pageSize);
+        uriBuilder.appendQueryParameter("order-by", orderBy);
 
         // return a completed URI
         return new ArticleLoader(this, uriBuilder.toString());
